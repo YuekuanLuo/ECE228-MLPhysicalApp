@@ -21,18 +21,9 @@ function [xarray,p,xhistarray,phist]=norm1d(mu,sigma,xmin,xmax,N,dx)
 
 xarray         = linspace(xmin,xmax,N); %range of x values for the density
 
-Nhist           = (xmax - xmin) / dx; %numer of points in the histogram
-xhistarray      = linspace(xmin,xmax,Nhist); %range of x values for the histogram
+Nhist           = (xmax - xmin) / dx; %number of points in the histogram
+xhistarray      = xmin:dx:xmax; %range of x values for the histogram
 
 p         = (1/sqrt(2*pi*(sigma^2))) * exp(-1.*(xarray-mu).^2./(2*sigma^2)); %normal distribution of mean mu, variance sigma at points given in xarray
 
-phist = zeros(Nhist,1);
-step = fix(N/Nhist);
-count = 1;
-while count <= Nhist
-    for i=1:step
-        phist(count) = phist(count) + p((count-1)*step+i); %histogram bin frequencies of normal distribution in 'p' for bin widths dx
-    end
-    count = count + 1;
-end
-phist = phist./(sum(phist));
+phist = (1/sqrt(2*pi*(sigma^2))) * exp(-1.*(xhistarray-mu).^2./(2*sigma^2)) .* dx;
